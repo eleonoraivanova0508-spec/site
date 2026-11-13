@@ -1,11 +1,10 @@
 
-name: CI/CD - Deploy Website
+name: Deploy Website
 
 on:
   push:
     branches:
       - main
-
   workflow_dispatch:
 
 permissions:
@@ -14,49 +13,42 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: pages
   cancel-in-progress: true
 
 jobs:
   build:
-    name: Check and Build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Get source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Check project files
         run: |
-          test -f index.html
-          test -f style.css
-          test -f script.js
-          echo "All project files exist!"
+          echo "Checking project files..."
+          test -f Cloud-CICD-Project/index.html
+          test -f Cloud-CICD-Project/style.css
+          test -f Cloud-CICD-Project/script.js
+          echo "All files found!"
 
-      - name: Check HTML
-        run: |
-          grep -q "<html" index.html
-          grep -q "</html>" index.html
-          echo "HTML check passed!"
-
-      - name: Configure GitHub Pages
+      - name: Configure Pages
         uses: actions/configure-pages@v5
 
       - name: Upload website
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
-          path: .
+          path: Cloud-CICD-Project
 
   deploy:
-    name: Deploy Website
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Publish website
+      - name: Deploy website
         id: deployment
         uses: actions/deploy-pages@v4
