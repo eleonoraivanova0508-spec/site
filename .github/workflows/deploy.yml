@@ -23,16 +23,13 @@ jobs:
     steps:
       - name: Get source code
         uses: actions/checkout@v5
-        with:
-          persist-credentials: false
 
       - name: Check project files
         run: |
           echo "Checking project files..."
-          ls -la
-          test -f index.html
-          test -f style.css
-          test -f script.js
+          test -f Cloud-CICD-Project/index.html
+          test -f Cloud-CICD-Project/style.css
+          test -f Cloud-CICD-Project/script.js
           echo "All files found!"
 
       - name: Configure Pages
@@ -41,7 +38,7 @@ jobs:
       - name: Upload website
         uses: actions/upload-pages-artifact@v4
         with:
-          path: .
+          path: Cloud-CICD-Project
 
   deploy:
     needs: build
